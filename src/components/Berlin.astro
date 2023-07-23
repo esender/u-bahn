@@ -1,0 +1,47 @@
+---
+import * as d3 from "d3";
+import berlin from "../assets/berlin.geo.json";
+
+const width = 1600;
+const height = 1400;
+
+/* https://github.com/d3/d3-geo#geoBounds */
+const [bottomLeft, topRight] = d3.geoBounds(berlin);
+
+/* https://bl.ocks.org/mbostock/4282586 */
+const lambda = -(topRight[0] + bottomLeft[0]) / 2;
+
+/* Coordinates for the center of the map*/
+const center = [
+  (topRight[0] + bottomLeft[0]) / 2 + lambda,
+  (topRight[1] + bottomLeft[1]) / 2,
+];
+
+const scale = Math.min(
+  width / (topRight[0] + bottomLeft[0]),
+  height / (topRight[1] - bottomLeft[1])
+);
+
+/* Creating the projection */
+const projection = d3
+  .geoAlbers()
+  .parallels([bottomLeft[1], topRight[1]])
+  .translate([width / 2, height / 2])
+  .rotate([lambda, 0, 0])
+  .center(center)
+  .scale(scale * 3200);
+
+const d = d3.geoPath(projection)(berlin);
+
+const stations = [
+  [13.4490065, 52.505014],
+  [13.4414625, 52.5008341],
+  [13.4280355, 52.4992628],
+].map((c) => projection(c));
+---
+
+<svg width={width} height={height}>
+  <path d={d} fill="rebeccapurple" stroke="rebeccapurple" fill-opacity="0.2"
+  ></path>
+  {stations.map((station) => <circle cx={station[0]} cy={station[1]} r="2" />)}
+</svg>
