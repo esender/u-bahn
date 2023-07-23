@@ -38,10 +38,25 @@ const stations = [
   [13.4414625, 52.5008341],
   [13.4280355, 52.4992628],
 ].map((c) => projection(c));
+
+const line = d3.line().curve(d3.curveNatural);
+const path = line(stations);
 ---
 
 <svg width={width} height={height}>
   <path d={d} fill="rebeccapurple" stroke="rebeccapurple" fill-opacity="0.2"
   ></path>
-  {stations.map((station) => <circle cx={station[0]} cy={station[1]} r="2" />)}
+  <path d={path} fill="none" stroke="green" stroke-width="2"></path>
+  {
+    stations.map((station) => (
+      <circle
+        cx={station[0]}
+        cy={station[1]}
+        r="2"
+        fill="white"
+        stroke="black"
+        stroke-width="1"
+      />
+    ))
+  }
 </svg>
