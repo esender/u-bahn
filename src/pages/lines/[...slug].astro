@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, getEntries } from "astro:content";
+
+export async function getStaticPaths() {
+  const lines = await getCollection("lines");
+  return lines.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const stations = await getEntries(entry.data.stations);
+---
+
+<Layout>
+  <h1>{entry.data.name}</h1>
+  {
+    stations.map((station) => (
+      <div>
+        <h2>{station.data.name}</h2>
+        <p>{station.data.coordinates.join(", ")}</p>
+      </div>
+    ))
+  }
+</Layout>

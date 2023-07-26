@@ -1,16 +1,9 @@
 ---
 import Berlin from "../components/Berlin.astro";
+import LinesIndex from "../components/LinesIndex.astro";
+import Layout from "../layouts/Layout.astro";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Berlin U-Bahn</title>
-  </head>
-  <body>
-    <Berlin />
-  </body>
-</html>
+<Layout>
+  <LinesIndex />
+</Layout>

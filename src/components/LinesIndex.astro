@@ -1,0 +1,7 @@
+---
+import { getCollection } from "astro:content";
+
+const lines = await getCollection("lines");
+---
+
+{lines.map((line) => <a href={`/lines/${line.id}`}>{line.data.name}</a>)}
