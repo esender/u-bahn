@@ -1,6 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Line from "../../components/Line.astro";
 import { getCollection, getEntries } from "astro:content";
+import { Image } from "astro:assets";
 
 export async function getStaticPaths() {
   const lines = await getCollection("lines");
@@ -12,16 +14,26 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const stations = await getEntries(entry.data.stations);
+
+const photos = await Astro.glob("../../assets/photos/**/*.jpg");
 ---
 
 <Layout>
-  <h1>{entry.data.name}</h1>
-  {
-    stations.map((station) => (
-      <div>
-        <h2>{station.data.name}</h2>
-        <p>{station.data.coordinates.join(", ")}</p>
-      </div>
-    ))
-  }
+  <Line name={entry.data.name} color={entry.data.color} />
+  <div class="border-l-8 relative" style={{ borderColor: entry.data.color }}>
+    {
+      stations.map((station) => (
+        <div class="mb-3 before:content-[' '] before:w-4 before:h-4 before:block before:rounded-full before:border before:border-black before:absolute before:-ml-5 before:mt-1.5 before:-translate-x-1/2 before:bg-white pl-4">
+          <h2 class="text-xl">{station.data.name}</h2>
+          <div class="flex max-w-full flex-wrap">
+            {photos
+              .filter((photo) => photo.default.src.includes(station.id))
+              .map((photo) => (
+                <Image src={photo.default} alt="" width="250px" />
+              ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
 </Layout>
